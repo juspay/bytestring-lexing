@@ -45,11 +45,12 @@ module Data.ByteString.Lex.Fractional
 
 import           Data.ByteString              (ByteString)
 import qualified Data.ByteString              as BS
-import qualified Data.ByteString.Unsafe       as BSU
-import           Data.Word                     (Word8)
-import qualified Data.ByteString.Lex.Integral as I
 import           Data.ByteString.Lex.Integral (readSigned)
+import qualified Data.ByteString.Lex.Integral as I
 import           Data.ByteString.Lex.Internal
+import qualified Data.ByteString.Unsafe       as BSU
+import           Data.Ratio                   ((%))
+import           Data.Word                    (Word8)
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
@@ -102,7 +103,7 @@ readDecimal xs =
                 Nothing         -> justPair (fromInteger whole) ys
                 Just (part, zs) ->
                     let base = 10 ^ (BS.length ys - 1 - BS.length zs)
-                        frac = fromInteger whole + (fromInteger part / base)
+                        frac = fromRational (fromInteger whole + part % base)
                     in justPair frac zs
 
 
